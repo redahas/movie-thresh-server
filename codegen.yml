@@ -1,0 +1,17 @@
+overwrite: true
+schema: 'src/schema/**/*.schema.graphql'
+generates:
+  ./src/schema/__generated__/resolvers-types.ts:
+    config:
+      useIndexSignature: true
+      contextType: '../index.js#ApolloServerContext'
+      scalars:
+        JSON: string
+        UUID: string
+        LocalDate: string
+        DateTime: string
+        EasternDateTime: string
+        EmailAddress: string
+    plugins:
+      - 'typescript'
+      - 'typescript-resolvers'
