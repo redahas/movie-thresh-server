@@ -3,8 +3,13 @@ schema: 'src/schema/**/*.schema.graphql'
 generates:
   ./src/schema/__generated__/resolvers-types.ts:
     config:
-      useIndexSignature: true
+      useIndexSignature: false
       contextType: '../index.js#ApolloServerContext'
+      defaultBaseType: 'Record<string, unknown>'
+      avoidOptionals:
+        field: false
+        object: false
+        inputValue: false
       scalars:
         JSON: string
         UUID: string

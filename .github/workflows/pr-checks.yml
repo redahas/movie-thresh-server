@@ -1,0 +1,122 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        env:
+          CI: true
+
+      - name: Run linting
+        run: yarn lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        env:
+          CI: true
+
+      - name: Type check
+        run: yarn typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        env:
+          CI: true
+
+      - name: Run tests
+        run: yarn test
+
+  comment:
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: checks } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.payload.pull_request.head.sha,
+            });
+            
+            const lintJob = checks.check_runs.find(check => check.name === 'lint');
+            const typecheckJob = checks.check_runs.find(check => check.name === 'typecheck');
+            const testJob = checks.check_runs.find(check => check.name === 'test');
+            
+            const allPassed = [lintJob, typecheckJob, testJob].every(job => job?.conclusion === 'success');
+            
+            const statusEmoji = allPassed ? '✅' : '❌';
+            const statusText = allPassed ? 'All checks passed!' : 'Some checks failed.';
+            
+            const comment = `## PR Check Results ${statusEmoji}
+            
+            ${statusText}
+            
+            | Check | Status |
+            |------|--------|
+            | Linting | ${lintJob?.conclusion === 'success' ? '✅ Passed' : '❌ Failed'} |
+            | Type Checking | ${typecheckJob?.conclusion === 'success' ? '✅ Passed' : '❌ Failed'} |
+            | Unit Tests | ${testJob?.conclusion === 'success' ? '✅ Passed' : '❌ Failed'} |
+            
+            ${allPassed ? '🎉 Ready to merge!' : '⚠️ Please fix the failing checks before merging.'}`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: comment,
+            }); 

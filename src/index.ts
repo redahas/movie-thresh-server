@@ -49,7 +49,9 @@ async function startApolloServer() {
     expressMiddleware(server, {
       context: async ({ req }) => {
         // Get authenticated user from Supabase
-        const user = await getAuthenticatedUser(req);
+        const user = await getAuthenticatedUser({
+          headers: { authorization: req.headers.authorization ?? '' },
+        });
 
         return {
           user,

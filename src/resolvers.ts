@@ -6,7 +6,7 @@ import { supabase } from './supabase.js';
 
 const resolvers = {
   Query: {
-    searchMovies: async (_, { query }) => {
+    searchMovies: async (_: unknown, { query }: { query: string }) => {
       console.log('Searching for:', query);
 
       if (!query || query.trim().length < 2) {

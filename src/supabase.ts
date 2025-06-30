@@ -21,7 +21,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 });
 
 // Helper function to get authenticated user from request
-export async function getAuthenticatedUser(req) {
+export async function getAuthenticatedUser(req: {
+  headers: { authorization: string };
+}) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
