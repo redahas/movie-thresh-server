@@ -105,8 +105,7 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
-export type WithIndex<TObject> = TObject & Record<string, any>;
-export type ResolversObject<TObject> = WithIndex<TObject>;
+
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -114,7 +113,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = Record<string, unknown>, TContext = Record<string, unknown>, TArgs = Record<string, unknown>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -151,21 +150,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<string, unknown>, TContext = Record<string, unknown>, TArgs = Record<string, unknown>> =
+  | ((...args: unknown[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = Record<string, unknown>, TContext = Record<string, unknown>> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = Record<string, unknown>, TContext = Record<string, unknown>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = Record<string, unknown>, TParent = Record<string, unknown>, TContext = Record<string, unknown>, TArgs = Record<string, unknown>> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -176,7 +175,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 
 /** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = ResolversObject<{
+export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -190,10 +189,10 @@ export type ResolversTypes = ResolversObject<{
   TmdbMovie: ResolverTypeWrapper<TmdbMovie>;
   TmdbMovieSearchResult: ResolverTypeWrapper<TmdbMovieSearchResult>;
   User: ResolverTypeWrapper<User>;
-}>;
+};
 
 /** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = ResolversObject<{
+export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
@@ -207,9 +206,9 @@ export type ResolversParentTypes = ResolversObject<{
   TmdbMovie: TmdbMovie;
   TmdbMovieSearchResult: TmdbMovieSearchResult;
   User: User;
-}>;
+};
 
-export type MovieResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['Movie'] = ResolversParentTypes['Movie']> = ResolversObject<{
+export type MovieResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['Movie'] = ResolversParentTypes['Movie']> = {
   director?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   genre?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -222,22 +221,22 @@ export type MovieResolvers<ContextType = ApolloServerContext, ParentType extends
   writer?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type MovieRatingResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['MovieRating'] = ResolversParentTypes['MovieRating']> = ResolversObject<{
+export type MovieRatingResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['MovieRating'] = ResolversParentTypes['MovieRating']> = {
   Source?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   Value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type MovieSearchResultResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['MovieSearchResult'] = ResolversParentTypes['MovieSearchResult']> = ResolversObject<{
+export type MovieSearchResultResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['MovieSearchResult'] = ResolversParentTypes['MovieSearchResult']> = {
   released?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tmdbId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type OmdbMovieResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['OmdbMovie'] = ResolversParentTypes['OmdbMovie']> = ResolversObject<{
+export type OmdbMovieResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['OmdbMovie'] = ResolversParentTypes['OmdbMovie']> = {
   Director?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   Genre?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   Language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -250,13 +249,13 @@ export type OmdbMovieResolvers<ContextType = ApolloServerContext, ParentType ext
   Writer?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   Year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type QueryResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+export type QueryResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   searchMovies?: Resolver<Array<ResolversTypes['MovieSearchResult']>, ParentType, ContextType, RequireFields<QuerySearchMoviesArgs, 'query'>>;
-}>;
+};
 
-export type TmdbMovieResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['TmdbMovie'] = ResolversParentTypes['TmdbMovie']> = ResolversObject<{
+export type TmdbMovieResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['TmdbMovie'] = ResolversParentTypes['TmdbMovie']> = {
   adult?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   backdrop_path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   genre_ids?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -272,26 +271,26 @@ export type TmdbMovieResolvers<ContextType = ApolloServerContext, ParentType ext
   vote_average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   vote_count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type TmdbMovieSearchResultResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['TmdbMovieSearchResult'] = ResolversParentTypes['TmdbMovieSearchResult']> = ResolversObject<{
+export type TmdbMovieSearchResultResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['TmdbMovieSearchResult'] = ResolversParentTypes['TmdbMovieSearchResult']> = {
   page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   results?: Resolver<Array<ResolversTypes['TmdbMovie']>, ParentType, ContextType>;
   total_pages?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   total_results?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type UserResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+export type UserResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type Resolvers<ContextType = ApolloServerContext> = ResolversObject<{
+export type Resolvers<ContextType = ApolloServerContext> = {
   Movie?: MovieResolvers<ContextType>;
   MovieRating?: MovieRatingResolvers<ContextType>;
   MovieSearchResult?: MovieSearchResultResolvers<ContextType>;
@@ -300,5 +299,5 @@ export type Resolvers<ContextType = ApolloServerContext> = ResolversObject<{
   TmdbMovie?: TmdbMovieResolvers<ContextType>;
   TmdbMovieSearchResult?: TmdbMovieSearchResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-}>;
+};
 
