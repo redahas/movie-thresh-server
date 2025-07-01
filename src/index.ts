@@ -2,11 +2,13 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
+import * as Sentry from '@sentry/node';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import helmet from 'helmet';
 import typeDefs from './schema/index';
+import './instruments.mjs';
 
 // Load environment variables
 dotenv.config();
@@ -17,6 +19,9 @@ import { getAuthenticatedUser } from './supabase';
 async function startApolloServer() {
   // Create Express app
   const app = express();
+
+  // Set up Sentry error handler before any middleware
+  Sentry.setupExpressErrorHandler(app);
 
   // Security middleware
   app.use(helmet());
@@ -64,6 +69,24 @@ async function startApolloServer() {
   // Health check endpoint
   app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
+  });
+
+  // Test endpoint to trigger Sentry error
+  app.get('/test-error', (req, res) => {
+    throw new Error('Test error for Sentry integration');
+  });
+
+  // Fallthrough error handler
+  app.use(function onError(
+    err: Error,
+    req: express.Request,
+    res: express.Response & { sentry?: string },
+    next: express.NextFunction
+  ) {
+    // The error id is attached to `res.sentry` to be returned
+    // and optionally displayed to the user for support.
+    res.statusCode = 500;
+    res.end(`${res.sentry}\n`);
   });
 
   // Start the Express server
