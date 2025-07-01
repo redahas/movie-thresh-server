@@ -71,11 +71,6 @@ async function startApolloServer() {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
   });
 
-  // Test endpoint to trigger Sentry error
-  app.get('/test-error', (req, res) => {
-    throw new Error('Test error for Sentry integration');
-  });
-
   // Fallthrough error handler
   app.use(function onError(
     err: Error,
