@@ -1,0 +1,25 @@
+type OmdbRating {
+  Source: String!
+  Value: String!
+}
+
+type OmdbMovie {
+  Title: String!
+  Year: String!
+  Rated: String!
+  Released: String!
+  Runtime: String!
+  Genre: String!
+  Director: String!
+  Writer: String!
+  Actors: String!
+  Plot: String!
+  Language: String!
+  Country: String!
+  Poster: String!
+  Ratings: [OmdbRating!]!
+  # Metascore: String!
+  # imdbRating: String!
+  # imdbVotes: String!
+  # imdbID: String!
+}

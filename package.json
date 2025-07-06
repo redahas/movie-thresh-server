@@ -21,6 +21,7 @@
     "@as-integrations/express4": "^1.1.0",
     "@graphql-tools/load-files": "^7.0.1",
     "@graphql-tools/merge": "^9.0.24",
+    "@keyv/redis": "^4.5.0",
     "@sentry/cli": "^2.46.0",
     "@sentry/node": "^9.34.0",
     "@supabase/supabase-js": "^2.39.0",
@@ -29,7 +30,8 @@
     "express": "^4.18.2",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
-    "helmet": "^7.1.0"
+    "helmet": "^7.1.0",
+    "keyv": "^5.3.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",
@@ -45,7 +47,13 @@
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },
-  "keywords": ["apollo", "graphql", "server", "express", "supabase"],
+  "keywords": [
+    "apollo",
+    "graphql",
+    "server",
+    "express",
+    "supabase"
+  ],
   "author": "",
   "license": "MIT",
   "engines": {

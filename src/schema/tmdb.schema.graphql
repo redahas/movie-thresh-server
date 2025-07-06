@@ -1,0 +1,64 @@
+type TmdbGenre {
+  id: Int!
+  name: String!
+}
+
+type TmdbProductionCompany {
+  id: Int!
+  logo_path: String
+  name: String!
+  origin_country: String!
+}
+
+type TmdbProductionCountry {
+  iso_3166_1: String!
+  name: String!
+}
+
+type TmdbSpokenLanguage {
+  english_name: String!
+  iso_639_1: String!
+  name: String!
+}
+
+type TmdbMovieDetails {
+  genres: [TmdbGenre!]!
+  id: Int!
+  imdb_id: String
+  origin_country: [String!]!
+  original_language: String!
+  original_title: String!
+  overview: String!
+  popularity: Float!
+  poster_path: String
+  production_companies: [TmdbProductionCompany!]!
+  production_countries: [TmdbProductionCountry!]!
+  release_date: String!
+  runtime: Int
+  spoken_languages: [TmdbSpokenLanguage!]!
+  title: String!
+}
+
+type TmdbMovie {
+  adult: Boolean!
+  backdrop_path: String!
+  genre_ids: [Int!]!
+  id: Int!
+  original_language: String!
+  original_title: String!
+  overview: String!
+  popularity: Float! 
+  poster_path: String!
+  release_date: String!
+  title: String!
+  video: Boolean!
+  vote_average: Float!
+  vote_count: Int!
+}
+
+type TmdbMovieSearchResult {
+  page: Int!
+  results: [TmdbMovie!]!
+  total_pages: Int!
+  total_results: Int!
+}

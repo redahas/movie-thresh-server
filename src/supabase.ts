@@ -20,6 +20,20 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
+// Helper function to create a Supabase client with user's JWT token
+export function createUserClient(token: string) {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Supabase configuration missing');
+  }
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  });
+}
+
 // Helper function to get authenticated user from request
 export async function getAuthenticatedUser(req: {
   headers: { authorization: string };

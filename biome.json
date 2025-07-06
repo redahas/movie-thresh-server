@@ -32,9 +32,9 @@
       "**/*.jsonc"
     ],
     "ignore": [
-      "src/schema/__generated__/*",
-      "dist/schema/__generated__/*",
-      "dist/supabase.d.ts"
+        "src/schema/__generated__/*",
+        "dist/schema/__generated__/*",
+        "dist/supabase.d.ts"
     ]
-  }
+      }
 }
