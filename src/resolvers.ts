@@ -89,6 +89,18 @@ const resolvers = {
       }
     },
     movieDetails: async (_: unknown, { tmdbId }: { tmdbId: number }) => {
+      if (!Number.isInteger(tmdbId) || tmdbId <= 0) {
+        const error = new Error('Invalid tmdbId: must be a positive integer');
+        Sentry.captureException(error, {
+          tags: {
+            resolver: 'movieDetails',
+          },
+          extra: {
+            tmdbId,
+          },
+        });
+        throw error;
+      }
       try {
         const TMDB_READ_ACCESS_TOKEN = process.env.TMDB_READ_ACCESS_TOKEN;
 
