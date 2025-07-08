@@ -347,6 +347,26 @@ const resolvers = {
         throw new Error('Failed to update user preferences');
       }
     },
+    clearCache: async () => {
+      try {
+        await movieCache.clear();
+        console.log('🗑️ Cache cleared successfully');
+        return true;
+      } catch (error) {
+        console.error('Error clearing cache:', error);
+
+        Sentry.captureException(error, {
+          tags: {
+            resolver: 'clearCache',
+          },
+          extra: {
+            error: error instanceof Error ? error.message : String(error),
+          },
+        });
+
+        return false;
+      }
+    },
   },
   User: {
     preferences: (parent: { preferences?: Record<string, unknown> }) => {

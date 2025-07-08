@@ -48,6 +48,7 @@ export type MovieSearchResult = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  clearCache: Scalars['Boolean']['output'];
   updateUserPreferences: User;
 };
 
@@ -353,6 +354,7 @@ export type MovieSearchResultResolvers<ContextType = ApolloServerContext, Parent
 };
 
 export type MutationResolvers<ContextType = ApolloServerContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  clearCache?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   updateUserPreferences?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserPreferencesArgs, 'preferences'>>;
 };
 

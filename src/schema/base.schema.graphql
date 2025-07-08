@@ -63,4 +63,5 @@ input UpdateUserPreferencesInput {
 
 type Mutation {
   updateUserPreferences(preferences: UpdateUserPreferencesInput!): User!
+  clearCache: Boolean!
 }

@@ -61,7 +61,7 @@ async function startApolloServer() {
 
         return {
           user,
-          token: req.headers.authorization,
+          token: req.headers.authorization ?? '',
         };
       },
     })
@@ -133,6 +133,12 @@ async function startApolloServer() {
     res.statusCode = 500;
     res.end(`${res.sentry}\n`);
   });
+
+  // Clear cache on startup if CLEAR_CACHE_ON_START is set
+  if (process.env.CLEAR_CACHE_ON_START === 'true') {
+    console.log('🗑️ Clearing cache on startup...');
+    await movieCache.clear();
+  }
 
   // Start the Express server
   const PORT = process.env.PORT || 4000;
