@@ -13,6 +13,7 @@ import './instruments.mjs';
 // Load environment variables
 dotenv.config();
 
+import { movieCache } from './cache.js';
 import { resolvers } from './resolvers';
 import { getAuthenticatedUser } from './supabase';
 
@@ -60,7 +61,7 @@ async function startApolloServer() {
 
         return {
           user,
-          token: req.headers.authorization,
+          token: req.headers.authorization ?? '',
         };
       },
     })
@@ -69,6 +70,55 @@ async function startApolloServer() {
   // Health check endpoint
   app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
+  });
+
+  // Cache management endpoints
+  app.get('/cache/stats', async (req, res) => {
+    try {
+      const stats = await movieCache.getStats();
+      res.json({
+        status: 'OK',
+        cache: stats,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to get cache stats',
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+
+  app.delete('/cache/clear', async (req, res) => {
+    try {
+      await movieCache.clear();
+      res.json({
+        status: 'OK',
+        message: 'Cache cleared successfully',
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to clear cache',
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+
+  app.delete('/cache/stats/reset', async (req, res) => {
+    try {
+      movieCache.resetStats();
+      res.json({
+        status: 'OK',
+        message: 'Cache stats reset successfully',
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to reset cache stats',
+        timestamp: new Date().toISOString(),
+      });
+    }
   });
 
   // Fallthrough error handler
@@ -83,6 +133,12 @@ async function startApolloServer() {
     res.statusCode = 500;
     res.end(`${res.sentry}\n`);
   });
+
+  // Clear cache on startup if CLEAR_CACHE_ON_START is set
+  if (process.env.CLEAR_CACHE_ON_START === 'true') {
+    console.log('🗑️ Clearing cache on startup...');
+    await movieCache.clear();
+  }
 
   // Start the Express server
   const PORT = process.env.PORT || 4000;

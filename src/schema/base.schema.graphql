@@ -1,41 +1,12 @@
 type Query {
   searchMovies(query: String!): [MovieSearchResult!]!
+  movieDetails(tmdbId: Int!): Movie!
+  me: User
 }
 
 type MovieRating {
-  Source: String!
-  Value: String!
-}
-
-type OmdbMovie {
-  Title: String!
-  Year: String!
-  Rated: String!
-  Released: String!
-  Runtime: String!
-  Genre: String!
-  Director: String!
-  Writer: String!
-  Plot: String!
-  Language: String!
-  Ratings: [MovieRating!]!
-}
-
-type TmdbMovie {
-  adult: Boolean!
-  backdrop_path: String!
-  genre_ids: [Int!]!
-  id: Int!
-  original_language: String!
-  original_title: String!
-  overview: String!
-  popularity: Float!
-  poster_path: String!
-  release_date: String!
-  title: String!
-  video: Boolean!
-  vote_average: Float!
-  vote_count: Int!
+  source: String!
+  value: String!
 }
 
 type Movie {
@@ -48,6 +19,7 @@ type Movie {
   director: String!
   writer: String!
   plot: String!
+  posters: [String!]!
   language: String!
   ratings: [MovieRating!]!
 }
@@ -58,17 +30,38 @@ type MovieSearchResult {
   tmdbId: Int!
 }
 
-type TmdbMovieSearchResult {
-  page: Int!
-  results: [TmdbMovie!]!
-  total_pages: Int!
-  total_results: Int!
-}
-
 type User {
   id: ID!
   username: String!
   email: String!
   createdAt: String!
   updatedAt: String!
+  preferences: UserPreferences
+}
+
+type UserPreferences {
+  theme: String
+  soundEnabled: Boolean
+  animationsEnabled: Boolean
+  autoPlayEnabled: Boolean
+  smoothScrollingEnabled: Boolean
+  imdbThreshold: Float
+  rottenTomatoesThreshold: Float
+  metacriticThreshold: Float
+}
+
+input UpdateUserPreferencesInput {
+  theme: String
+  soundEnabled: Boolean
+  animationsEnabled: Boolean
+  autoPlayEnabled: Boolean
+  smoothScrollingEnabled: Boolean
+  imdbThreshold: Float
+  rottenTomatoesThreshold: Float
+  metacriticThreshold: Float
+}
+
+type Mutation {
+  updateUserPreferences(preferences: UpdateUserPreferencesInput!): User!
+  clearCache: Boolean!
 }
