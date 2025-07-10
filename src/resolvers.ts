@@ -89,7 +89,7 @@ const resolvers = {
       }
     },
     movieDetails: async (_: unknown, { tmdbId }: { tmdbId: number }) => {
-      if (!Number.isInteger(tmdbId) || tmdbId <= 0) {
+      if (!Number.isInteger(tmdbId) || tmdbId <= 0 || tmdbId > 999999999) {
         const error = new Error('Invalid tmdbId: must be a positive integer');
         Sentry.captureException(error, {
           tags: {
