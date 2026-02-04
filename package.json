@@ -17,7 +17,7 @@
     "sentry:sourcemaps": "dotenv -e .env.sentry-build-plugin -- sentry-cli sourcemaps inject --org moviethresh --project movie-thresh-server ./dist && dotenv -e .env.sentry-build-plugin -- sentry-cli sourcemaps upload --org moviethresh --project movie-thresh-server ./dist"
   },
   "dependencies": {
-    "@apollo/server": "^4.9.5",
+    "@apollo/server": "^5.4.0",
     "@as-integrations/express4": "^1.1.0",
     "@graphql-tools/load-files": "^7.0.1",
     "@graphql-tools/merge": "^9.0.24",
